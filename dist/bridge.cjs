@@ -20884,8 +20884,12 @@ function interpolate(value, env = process.env) {
 }
 
 // src/bridge.mjs
-var VERSION = "0.1.0";
+var VERSION = "0.1.1";
 var timeout = 3e4;
+function childEnvironment(environment, overrides = {}) {
+  const inherited = Object.fromEntries(Object.entries(environment).filter(([key]) => !["npm_config_package", "npm_config_call", "npm_lifecycle_event", "npm_lifecycle_script", "npm_command", "INIT_CWD"].includes(key) && !key.startsWith("npm_package_")));
+  return { ...inherited, ...overrides };
+}
 function toolName(server, tool) {
   const label = `${server}__${tool}`.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 49);
   return `${label}_${(0, import_node_crypto.createHash)("sha256").update(JSON.stringify([server, tool])).digest("hex").slice(0, 12)}`;
@@ -20938,7 +20942,7 @@ async function createBridge({ start = process.cwd(), manifest, only } = {}) {
         c.client = client;
         let transport;
         if (cfg.type === "stdio") {
-          transport = new StdioClientTransport({ command: cfg.command, args: cfg.args, env: { ...process.env, ...cfg.env }, cwd: root, stderr: "pipe" });
+          transport = new StdioClientTransport({ command: cfg.command, args: cfg.args, env: childEnvironment(process.env, cfg.env), cwd: root, stderr: "pipe" });
           transport.stderr?.resume();
         } else {
           const url2 = new URL(cfg.url);

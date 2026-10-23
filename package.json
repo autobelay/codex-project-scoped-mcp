@@ -1,6 +1,6 @@
 {
   "name": "@autobelay/codex-project-scoped-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Discover a project's mcp.json when Codex starts, and expose its MCP tools through a session-local bridge.",
   "type": "module",
   "license": "MIT",

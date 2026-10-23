@@ -9,8 +9,17 @@ import { createHash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { discover, readManifest, interpolate } from './manifest.mjs';
 
-export const VERSION = '0.1.0';
+export const VERSION = '0.1.1';
 const timeout = 30000;
+// npm exec exports its own package selector. Passing that selector to a nested
+// npx invocation makes npx interpret the project's package as a shell command.
+// Keep user registry/cache/auth settings; remove only launcher/lifecycle state.
+export function childEnvironment(environment, overrides = {}) {
+  const inherited = Object.fromEntries(Object.entries(environment).filter(([key]) =>
+    !['npm_config_package', 'npm_config_call', 'npm_lifecycle_event', 'npm_lifecycle_script', 'npm_command', 'INIT_CWD'].includes(key)
+    && !key.startsWith('npm_package_')));
+  return {...inherited, ...overrides};
+}
 // The full original names participate in the digest; truncation cannot merge names.
 export function toolName(server, tool) {
   const label = `${server}__${tool}`.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 49);
@@ -59,7 +68,7 @@ export async function createBridge({start = process.cwd(), manifest, only} = {})
         c.client = client;
         let transport;
         if (cfg.type === 'stdio') {
-          transport = new StdioClientTransport({command:cfg.command,args:cfg.args,env:{...process.env,...cfg.env},cwd:root,stderr:'pipe'});
+          transport = new StdioClientTransport({command:cfg.command,args:cfg.args,env:childEnvironment(process.env,cfg.env),cwd:root,stderr:'pipe'});
           // Drain but do not print child stderr: some servers log credentials.
           transport.stderr?.resume();
         } else {

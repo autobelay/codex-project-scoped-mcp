@@ -123,14 +123,14 @@ The compatibility-format MCP entry intentionally omits `cwd`: local Codex suppli
 
 The CLI and desktop share plugin configuration, but directory handoff must be supplied by a local Codex session. CLI integration is exercised on this repository's tested version; a desktop-specific integration result is not implied. Hosted/cloud threads are not supported.
 
-The package contains no lifecycle hooks. OpenAI currently requires approved-partner allowlisting for public local-MCP submissions, and marks them desktop-only. Marketplace acceptance and support for a dynamically aggregated tool catalogue remain OpenAI's decisions. This project is not an official-directory listing and is not affiliated with OpenAI. See [plugin packaging](https://developers.openai.com/plugins/build/plugins) and [desktop-only submission](https://developers.openai.com/plugins/deploy/desktop-only).
+The package contains no lifecycle hooks. OpenAI currently requires approved-partner allowlisting for public local-MCP submissions, and marks them desktop-only. Marketplace acceptance and support for a dynamically aggregated tool catalogue remain OpenAI's decisions. This project is not an official-directory listing and is not affiliated with OpenAI. See [marketplace submission notes](MARKETPLACE.md), [plugin packaging](https://developers.openai.com/plugins/build/plugins) and [desktop-only submission](https://developers.openai.com/plugins/deploy/desktop-only).
 
 ## Standalone use and development
 
 The release tarball also provides a normal MCP executable:
 
 ```sh
-npx --yes --package https://github.com/autobelay/codex-project-scoped-mcp/releases/download/v0.1.0/autobelay-codex-project-scoped-mcp-0.1.0.tgz codex-project-scoped-mcp
+npx --yes --package https://github.com/autobelay/codex-project-scoped-mcp/releases/download/v0.1.1/autobelay-codex-project-scoped-mcp-0.1.1.tgz codex-project-scoped-mcp
 ```
 
 This speaks MCP over stdin/stdout; it is not an interactive command. `--directory PATH`, `--manifest PATH` and `--only server-a,server-b` are available for explicit embedding and diagnosis. Normal plugin installation needs none of them.
@@ -141,6 +141,6 @@ npm run build
 npm test
 ```
 
-The tests exercise the bundled executable, discovery from subdirectories, worktree and nested-checkout behavior, concurrent project isolation, tool pagination, relative cwd, environment propagation, failed sibling servers, resources and prompts. Fixtures contain only synthetic data. Built artifacts are committed so Git marketplace installations do not need dependency installation or a build hook.
+The tests exercise the bundled executable, discovery from subdirectories, worktree and nested-checkout behavior, concurrent project isolation, tool pagination, relative cwd, environment propagation, failed sibling servers, authenticated HTTP, structured results, nested npx execution, resources and prompts. Fixtures contain only synthetic data. Built artifacts are committed so Git marketplace installations do not need dependency installation or a build hook.
 
 MIT licensed. Bundled dependency notices are in `THIRD_PARTY_NOTICES`.
