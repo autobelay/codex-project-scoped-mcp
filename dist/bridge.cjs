@@ -20831,7 +20831,8 @@ async function discover(start = process.cwd()) {
   let dir = (0, import_node_path.resolve)(start);
   while (true) {
     try {
-      if ((await (0, import_promises.stat)((0, import_node_path.join)(dir, "mcp.json"))).isFile()) return (0, import_node_path.join)(dir, "mcp.json");
+      if ((await (0, import_promises.stat)((0, import_node_path.join)(dir, "mcp.json"))).isFile())
+        return (0, import_node_path.join)(dir, "mcp.json");
     } catch (e) {
       if (e.code !== "ENOENT") throw e;
     }
@@ -20853,19 +20854,28 @@ function strings(v) {
   return record2(v) && Object.values(v).every((x) => typeof x === "string");
 }
 function validate2(document) {
-  if (!record2(document) || !record2(document.mcpServers)) throw new Error("Expected an mcpServers object");
+  if (!record2(document) || !record2(document.mcpServers))
+    throw new Error("Expected an mcpServers object");
   for (const [name, s] of Object.entries(document.mcpServers)) {
-    if (!/^[a-zA-Z0-9_\[\]-]+$/.test(name)) throw new Error("Invalid server name");
+    if (!/^[a-zA-Z0-9_\[\]-]+$/.test(name))
+      throw new Error("Invalid server name");
     if (!record2(s)) throw new Error(`Invalid server entry: ${name}`);
-    if (!["stdio", "streamable-http", "sse"].includes(s.type)) throw new Error(`Unsupported transport for ${name}`);
-    for (const field of ["title", "description"]) if (s[field] !== void 0 && typeof s[field] !== "string") throw new Error(`Invalid ${field} for ${name}`);
+    if (!["stdio", "streamable-http", "sse"].includes(s.type))
+      throw new Error(`Unsupported transport for ${name}`);
+    for (const field of ["title", "description"])
+      if (s[field] !== void 0 && typeof s[field] !== "string")
+        throw new Error(`Invalid ${field} for ${name}`);
     if (s.type === "stdio") {
-      if (typeof s.command !== "string" || !s.command) throw new Error(`Missing command for ${name}`);
-      if (s.args !== void 0 && (!Array.isArray(s.args) || !s.args.every((v) => typeof v === "string"))) throw new Error(`Invalid args for ${name}`);
-      if (s.env !== void 0 && !strings(s.env)) throw new Error(`Invalid env for ${name}`);
+      if (typeof s.command !== "string" || !s.command)
+        throw new Error(`Missing command for ${name}`);
+      if (s.args !== void 0 && (!Array.isArray(s.args) || !s.args.every((v) => typeof v === "string")))
+        throw new Error(`Invalid args for ${name}`);
+      if (s.env !== void 0 && !strings(s.env))
+        throw new Error(`Invalid env for ${name}`);
     } else {
       if (typeof s.url !== "string") throw new Error(`Missing URL for ${name}`);
-      if (s.headers !== void 0 && !strings(s.headers)) throw new Error(`Invalid headers for ${name}`);
+      if (s.headers !== void 0 && !strings(s.headers))
+        throw new Error(`Invalid headers for ${name}`);
     }
   }
   return document.mcpServers;
@@ -20874,12 +20884,17 @@ async function readManifest(path) {
   return validate2(JSON.parse(await (0, import_promises.readFile)(path, "utf8")));
 }
 function interpolate(value, env = process.env) {
-  if (typeof value === "string") return value.replace(/\$\{env:([A-Za-z_][A-Za-z0-9_]*)\}/g, (_, key) => {
-    if (env[key] === void 0) throw new Error(`Missing environment variable: ${key}`);
-    return env[key];
-  });
+  if (typeof value === "string")
+    return value.replace(/\$\{env:([A-Za-z_][A-Za-z0-9_]*)\}/g, (_, key) => {
+      if (env[key] === void 0)
+        throw new Error(`Missing environment variable: ${key}`);
+      return env[key];
+    });
   if (Array.isArray(value)) return value.map((v) => interpolate(v, env));
-  if (record2(value)) return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, interpolate(v, env)]));
+  if (record2(value))
+    return Object.fromEntries(
+      Object.entries(value).map(([k, v]) => [k, interpolate(v, env)])
+    );
   return value;
 }
 
@@ -20887,7 +20902,18 @@ function interpolate(value, env = process.env) {
 var VERSION = "0.1.1";
 var timeout = 3e4;
 function childEnvironment(environment, overrides = {}) {
-  const inherited = Object.fromEntries(Object.entries(environment).filter(([key]) => !["npm_config_package", "npm_config_call", "npm_lifecycle_event", "npm_lifecycle_script", "npm_command", "INIT_CWD"].includes(key) && !key.startsWith("npm_package_")));
+  const inherited = Object.fromEntries(
+    Object.entries(environment).filter(
+      ([key]) => ![
+        "npm_config_package",
+        "npm_config_call",
+        "npm_lifecycle_event",
+        "npm_lifecycle_script",
+        "npm_command",
+        "INIT_CWD"
+      ].includes(key) && !key.startsWith("npm_package_")
+    )
+  );
   return { ...inherited, ...overrides };
 }
 function toolName(server, tool) {
@@ -20895,7 +20921,11 @@ function toolName(server, tool) {
   return `${label}_${(0, import_node_crypto.createHash)("sha256").update(JSON.stringify([server, tool])).digest("hex").slice(0, 12)}`;
 }
 async function allPages(client, method) {
-  const key = { listTools: "tools", listResources: "resources", listPrompts: "prompts" }[method];
+  const key = {
+    listTools: "tools",
+    listResources: "resources",
+    listPrompts: "prompts"
+  }[method];
   let cursor;
   const values = [];
   const seen = /* @__PURE__ */ new Set();
@@ -20903,12 +20933,17 @@ async function allPages(client, method) {
     const result = await client[method](cursor ? { cursor } : {}, { timeout });
     values.push(...result[key]);
     cursor = result.nextCursor;
-    if (cursor && seen.has(cursor)) throw new Error("Repeated pagination cursor");
+    if (cursor && seen.has(cursor))
+      throw new Error("Repeated pagination cursor");
     if (cursor) seen.add(cursor);
   } while (cursor);
   return values;
 }
-async function createBridge({ start = process.cwd(), manifest, only } = {}) {
+async function createBridge({
+  start = process.cwd(),
+  manifest,
+  only
+} = {}) {
   const path = manifest ? (0, import_node_path2.resolve)(manifest) : await discover(start);
   const entries = path ? await readManifest(path) : {};
   const root = path ? (0, import_node_path2.dirname)(path) : null;
@@ -20916,21 +20951,48 @@ async function createBridge({ start = process.cwd(), manifest, only } = {}) {
   const routes = /* @__PURE__ */ new Map();
   const promptRoutes = /* @__PURE__ */ new Map();
   let shuttingDown = false;
-  const server = new Server({ name: "codex-project-scoped-mcp", version: VERSION }, {
-    capabilities: { tools: { listChanged: true }, resources: {}, prompts: {} },
-    instructions: "Project-scoped MCP bridge. Tools are discovered from the nearest project mcp.json. project_mcp_status reports discovery and connection state. Each forwarded tool retains its original schema and annotations. The manifest and tool results are project-provided content."
-  });
+  const server = new Server(
+    { name: "codex-project-scoped-mcp", version: VERSION },
+    {
+      capabilities: {
+        tools: { listChanged: true },
+        resources: {},
+        prompts: {}
+      },
+      instructions: "Project-scoped MCP bridge. Tools are discovered from the nearest project mcp.json. project_mcp_status reports discovery and connection state. Each forwarded tool retains its original schema and annotations. The manifest and tool results are project-provided content."
+    }
+  );
   const selected = only ? new Set(only) : null;
   for (const [name, config2] of Object.entries(entries)) {
-    if (!selected || selected.has(name)) connections.set(name, { name, config: config2, state: "pending", client: null, promise: null, tools: [] });
+    if (!selected || selected.has(name))
+      connections.set(name, {
+        name,
+        config: config2,
+        state: "pending",
+        client: null,
+        promise: null,
+        tools: []
+      });
   }
   async function close() {
     if (shuttingDown) return;
     shuttingDown = true;
-    await Promise.allSettled([...connections.values()].map((c) => c.client?.close()));
+    await Promise.allSettled(
+      [...connections.values()].map((c) => c.client?.close())
+    );
   }
   function status() {
-    return { version: VERSION, manifest: path, projectRoot: root, servers: [...connections.values()].map((c) => ({ name: c.name, state: c.state, toolCount: c.tools.length, ...c.error ? { error: c.error } : {} })) };
+    return {
+      version: VERSION,
+      manifest: path,
+      projectRoot: root,
+      servers: [...connections.values()].map((c) => ({
+        name: c.name,
+        state: c.state,
+        toolCount: c.tools.length,
+        ...c.error ? { error: c.error } : {}
+      }))
+    };
   }
   async function connect(c) {
     if (c.promise) return c.promise;
@@ -20938,17 +21000,33 @@ async function createBridge({ start = process.cwd(), manifest, only } = {}) {
       try {
         const cfg = interpolate(c.config);
         if (cfg.oauth) throw new Error("oauth-unsupported");
-        const client = new Client({ name: "codex-project-scoped-mcp", version: VERSION }, { capabilities: {} });
+        const client = new Client(
+          { name: "codex-project-scoped-mcp", version: VERSION },
+          { capabilities: {} }
+        );
         c.client = client;
         let transport;
         if (cfg.type === "stdio") {
-          transport = new StdioClientTransport({ command: cfg.command, args: cfg.args, env: childEnvironment(process.env, cfg.env), cwd: root, stderr: "pipe" });
+          transport = new StdioClientTransport({
+            command: cfg.command,
+            args: cfg.args,
+            env: childEnvironment(process.env, cfg.env),
+            cwd: root,
+            stderr: "pipe"
+          });
           transport.stderr?.resume();
         } else {
           const url2 = new URL(cfg.url);
-          if (!["https:", "http:"].includes(url2.protocol)) throw new Error("invalid-url");
-          const options2 = { requestInit: { headers: cfg.headers }, fetch: (input, init) => fetch(input, { ...init, redirect: "error" }) };
-          transport = cfg.type === "sse" ? new SSEClientTransport(url2, { ...options2, eventSourceInit: { fetch: options2.fetch } }) : new StreamableHTTPClientTransport(url2, options2);
+          if (!["https:", "http:"].includes(url2.protocol))
+            throw new Error("invalid-url");
+          const options2 = {
+            requestInit: { headers: cfg.headers },
+            fetch: (input, init) => fetch(input, { ...init, redirect: "error" })
+          };
+          transport = cfg.type === "sse" ? new SSEClientTransport(url2, {
+            ...options2,
+            eventSourceInit: { fetch: options2.fetch }
+          }) : new StreamableHTTPClientTransport(url2, options2);
         }
         client.onerror = () => {
         };
@@ -20969,14 +21047,17 @@ async function createBridge({ start = process.cwd(), manifest, only } = {}) {
         c.state = "connected";
         if (client.getServerCapabilities()?.tools) {
           c.tools = await allPages(client, "listTools");
-          client.setNotificationHandler(ToolListChangedNotificationSchema, async () => {
-            try {
-              c.tools = await allPages(client, "listTools");
-              await server.sendToolListChanged();
-            } catch {
-              c.error = "Could not refresh tools";
+          client.setNotificationHandler(
+            ToolListChangedNotificationSchema,
+            async () => {
+              try {
+                c.tools = await allPages(client, "listTools");
+                await server.sendToolListChanged();
+              } catch {
+                c.error = "Could not refresh tools";
+              }
             }
-          });
+          );
         }
       } catch (e) {
         c.state = "failed";
@@ -20996,15 +21077,39 @@ async function createBridge({ start = process.cwd(), manifest, only } = {}) {
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     await ready();
     routes.clear();
-    const tools = [{ name: "project_mcp_status", description: "Report the discovered project manifest, server names, connection state and tool counts. Does not return credentials.", inputSchema: { type: "object", properties: {}, additionalProperties: false }, annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false } }];
-    for (const c of connections.values()) if (c.state === "connected") {
-      for (const tool of c.tools) {
-        const name = toolName(c.name, tool.name);
-        routes.set(name, { c, original: tool.name });
-        const context = [c.config.title, c.config.description, c.client.getInstructions()].filter(Boolean).join("\n");
-        tools.push({ ...tool, name, description: [`[${c.name}]`, tool.description, context].filter(Boolean).join("\n") });
+    const tools = [
+      {
+        name: "project_mcp_status",
+        description: "Report the discovered project manifest, server names, connection state and tool counts. Does not return credentials.",
+        inputSchema: {
+          type: "object",
+          properties: {},
+          additionalProperties: false
+        },
+        annotations: {
+          readOnlyHint: true,
+          destructiveHint: false,
+          openWorldHint: false
+        }
       }
-    }
+    ];
+    for (const c of connections.values())
+      if (c.state === "connected") {
+        for (const tool of c.tools) {
+          const name = toolName(c.name, tool.name);
+          routes.set(name, { c, original: tool.name });
+          const context = [
+            c.config.title,
+            c.config.description,
+            c.client.getInstructions()
+          ].filter(Boolean).join("\n");
+          tools.push({
+            ...tool,
+            name,
+            description: [`[${c.name}]`, tool.description, context].filter(Boolean).join("\n")
+          });
+        }
+      }
     return { tools };
   });
   server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
@@ -21013,34 +21118,72 @@ async function createBridge({ start = process.cwd(), manifest, only } = {}) {
       return { content: [{ type: "text", text: JSON.stringify(status()) }] };
     }
     const route = routes.get(request.params.name);
-    if (!route) return { isError: true, content: [{ type: "text", text: "Unknown project tool; refresh the tool list." }] };
+    if (!route)
+      return {
+        isError: true,
+        content: [
+          {
+            type: "text",
+            text: "Unknown project tool; refresh the tool list."
+          }
+        ]
+      };
     try {
-      return await route.c.client.callTool({ ...request.params, name: route.original }, void 0, options(extra));
+      return await route.c.client.callTool(
+        { ...request.params, name: route.original },
+        void 0,
+        options(extra)
+      );
     } catch {
-      return { isError: true, content: [{ type: "text", text: `The MCP call to ${route.c.name} failed. Check that server locally; transport details are omitted to avoid exposing credentials.` }] };
+      return {
+        isError: true,
+        content: [
+          {
+            type: "text",
+            text: `The MCP call to ${route.c.name} failed. Check that server locally; transport details are omitted to avoid exposing credentials.`
+          }
+        ]
+      };
     }
   });
   const resourceUri = (name, uri) => `project-mcp://resource/${encodeURIComponent(name)}/${encodeURIComponent(uri)}`;
   server.setRequestHandler(ListResourcesRequestSchema, async () => {
     await ready();
     const resources = [];
-    for (const c of connections.values()) if (c.state === "connected" && c.client.getServerCapabilities()?.resources) {
-      try {
-        for (const r of await allPages(c.client, "listResources")) resources.push({ ...r, uri: resourceUri(c.name, r.uri), name: `${c.name}: ${r.name}` });
-      } catch {
+    for (const c of connections.values())
+      if (c.state === "connected" && c.client.getServerCapabilities()?.resources) {
+        try {
+          for (const r of await allPages(c.client, "listResources"))
+            resources.push({
+              ...r,
+              uri: resourceUri(c.name, r.uri),
+              name: `${c.name}: ${r.name}`
+            });
+        } catch {
+        }
       }
-    }
     return { resources };
   });
   server.setRequestHandler(ReadResourceRequestSchema, async (req, extra) => {
-    const match = /^project-mcp:\/\/resource\/([^/]+)\/(.+)$/.exec(req.params.uri);
+    const match = /^project-mcp:\/\/resource\/([^/]+)\/(.+)$/.exec(
+      req.params.uri
+    );
     if (!match) throw new Error("Unknown project resource");
     await ready();
     const c = connections.get(decodeURIComponent(match[1]));
     if (c?.state !== "connected") throw new Error("Project server unavailable");
     try {
-      const result = await c.client.readResource({ uri: decodeURIComponent(match[2]) }, options(extra));
-      return { ...result, contents: result.contents.map((v) => ({ ...v, uri: resourceUri(c.name, v.uri) })) };
+      const result = await c.client.readResource(
+        { uri: decodeURIComponent(match[2]) },
+        options(extra)
+      );
+      return {
+        ...result,
+        contents: result.contents.map((v) => ({
+          ...v,
+          uri: resourceUri(c.name, v.uri)
+        }))
+      };
     } catch {
       throw new Error("Project resource read failed");
     }
@@ -21049,23 +21192,27 @@ async function createBridge({ start = process.cwd(), manifest, only } = {}) {
     await ready();
     promptRoutes.clear();
     const prompts = [];
-    for (const c of connections.values()) if (c.state === "connected" && c.client.getServerCapabilities()?.prompts) {
-      try {
-        for (const p of await allPages(c.client, "listPrompts")) {
-          const name = toolName(c.name, p.name);
-          promptRoutes.set(name, { c, original: p.name });
-          prompts.push({ ...p, name });
+    for (const c of connections.values())
+      if (c.state === "connected" && c.client.getServerCapabilities()?.prompts) {
+        try {
+          for (const p of await allPages(c.client, "listPrompts")) {
+            const name = toolName(c.name, p.name);
+            promptRoutes.set(name, { c, original: p.name });
+            prompts.push({ ...p, name });
+          }
+        } catch {
         }
-      } catch {
       }
-    }
     return { prompts };
   });
   server.setRequestHandler(GetPromptRequestSchema, async (req, extra) => {
     const route = promptRoutes.get(req.params.name);
     if (!route) throw new Error("Unknown project prompt; list prompts first");
     try {
-      return await route.c.client.getPrompt({ ...req.params, name: route.original }, options(extra));
+      return await route.c.client.getPrompt(
+        { ...req.params, name: route.original },
+        options(extra)
+      );
     } catch {
       throw new Error("Project prompt request failed");
     }
@@ -21079,12 +21226,18 @@ async function main(args = process.argv.slice(2)) {
     return;
   }
   if (args.includes("--help")) {
-    console.log("codex-project-scoped-mcp [--directory PATH] [--manifest PATH] [--only SERVER,...]\nRuns an MCP server over stdio. Normally installed once as a Codex plugin.");
+    console.log(
+      "codex-project-scoped-mcp [--directory PATH] [--manifest PATH] [--only SERVER,...]\nRuns an MCP server over stdio. Normally installed once as a Codex plugin."
+    );
     return;
   }
   const config2 = {};
   for (let i = 0; i < args.length; i++) {
-    const key = { "--directory": "start", "--manifest": "manifest", "--only": "only" }[args[i]];
+    const key = {
+      "--directory": "start",
+      "--manifest": "manifest",
+      "--only": "only"
+    }[args[i]];
     if (!key || !args[i + 1]) throw new Error("Unknown or incomplete argument");
     config2[key] = key === "only" ? args[++i].split(",") : args[++i];
   }
@@ -21100,7 +21253,9 @@ async function main(args = process.argv.slice(2)) {
 
 // src/cli.mjs
 main().catch(() => {
-  process.stderr.write("Project MCP bridge could not start. Check the manifest syntax and installation.\n");
+  process.stderr.write(
+    "Project MCP bridge could not start. Check the manifest syntax and installation.\n"
+  );
   process.exitCode = 1;
 });
 /*! Bundled license information:

@@ -6,7 +6,7 @@ This local plugin reads the nearest `mcp.json` at session startup and exposes it
 
 ## Install
 
-Requires Node.js 22 or newer (including `npx`), Git, and a Codex CLI with plugin marketplace support. Version 0.163.0 was used for development and integration testing.
+Requires Node.js 22 or newer (including `npx`), Git, and a Codex CLI with plugin marketplace support. Version 0.163.0 was used for development and integration testing; see [tested behavior](TESTING.md).
 
 ```sh
 codex plugin marketplace add autobelay/codex-project-scoped-mcp
