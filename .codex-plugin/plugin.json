@@ -1,0 +1,18 @@
+{
+  "name": "codex-project-scoped-mcp",
+  "version": "0.1.0",
+  "description": "Automatically discover the current project\u2019s mcp.json and connect its local and remote MCP servers.",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Project-scoped MCP",
+    "shortDescription": "Your project\u2019s tools, locally",
+    "longDescription": "Loads the nearest project mcp.json when a local Codex session starts. Servers and relative paths stay scoped to that checkout. No launch wrapper or configuration synchronization.",
+    "developerName": "Autobelay",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Local project MCP discovery"
+    ],
+    "websiteURL": "https://github.com/autobelay/codex-project-scoped-mcp"
+  },
+  "requires_local_executor": true
+}

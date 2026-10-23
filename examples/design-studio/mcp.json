@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "project-design": {
+      "type": "stdio",
+      "title": "Fictional project design assistant",
+      "description": "Use this checkout’s design tokens when discussing this application’s UI.",
+      "command": "node",
+      "args": ["../../dist/design-example.cjs"]
+    }
+  }
+}

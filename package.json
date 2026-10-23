@@ -1,0 +1,31 @@
+{
+  "name": "@autobelay/codex-project-scoped-mcp",
+  "version": "0.1.0",
+  "description": "Discover a project's mcp.json when Codex starts, and expose its MCP tools through a session-local bridge.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/autobelay/codex-project-scoped-mcp.git"
+  },
+  "bin": {
+    "codex-project-scoped-mcp": "dist/bridge.cjs"
+  },
+  "files": [
+    "dist/bridge.cjs",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "@modelcontextprotocol/sdk": "1.32.1"
+  }
+}

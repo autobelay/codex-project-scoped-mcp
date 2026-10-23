@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "project-scoped": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package",
+        "https://github.com/autobelay/codex-project-scoped-mcp/releases/download/v0.1.0/autobelay-codex-project-scoped-mcp-0.1.0.tgz",
+        "codex-project-scoped-mcp"
+      ],
+      "startup_timeout_sec": 120,
+      "tool_timeout_sec": 300
+    }
+  }
+}

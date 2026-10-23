@@ -1,0 +1,20 @@
+{
+  "name": "autobelay-project-mcp",
+  "interface": {
+    "displayName": "Autobelay Project MCP"
+  },
+  "plugins": [
+    {
+      "name": "codex-project-scoped-mcp",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
