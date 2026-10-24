@@ -2,6 +2,8 @@
 
 The **v0.1.2** presentation update uses the display name **Local Project MCP**, a `local-project-mcp` connection, and readable MCP titles for tools and prompts. The bundled-process tests verify the server title, generated tool titles, preservation of a downstream title, and forwarding. The live project-discovery results below describe v0.1.1.
 
+On 2026-10-24, v0.1.2 was installed through the public marketplace with Codex CLI 0.163.0. The app-server `plugin/read` API returned `Local Project MCP`, the updated short and long descriptions, and `local-project-mcp` as the MCP server name. A normal `codex exec` session in `examples/design-studio` called both `project_mcp_status` and the fictional `read_design_tokens` tool successfully. Desktop pixels were not inspected; the UI automation tool denied access to the app. MCP titles are advertised metadata, and clients that render technical tool names can still show the stable hash suffix.
+
 Release **v0.1.1** was installed from the public GitHub marketplace and exercised with **Codex CLI 0.163.0**, **Node.js 24.22.0**, on **macOS**, on 2026-10-23.
 
 ## Live Codex sessions
