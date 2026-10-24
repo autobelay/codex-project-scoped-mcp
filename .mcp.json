@@ -1,12 +1,12 @@
 {
   "mcpServers": {
-    "project-scoped": {
+    "local-project-mcp": {
       "type": "stdio",
       "command": "npx",
       "args": [
         "--yes",
         "--package",
-        "https://github.com/autobelay/codex-project-scoped-mcp/releases/download/v0.1.1/autobelay-codex-project-scoped-mcp-0.1.1.tgz",
+        "https://github.com/autobelay/codex-project-scoped-mcp/releases/download/v0.1.2/autobelay-codex-project-scoped-mcp-0.1.2.tgz",
         "codex-project-scoped-mcp"
       ],
       "startup_timeout_sec": 120,

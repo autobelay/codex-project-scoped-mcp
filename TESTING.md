@@ -1,5 +1,7 @@
 # Tested behavior
 
+The **v0.1.2** presentation update uses the display name **Local Project MCP**, a `local-project-mcp` connection, and readable MCP titles for tools and prompts. The bundled-process tests verify the server title, generated tool titles, preservation of a downstream title, and forwarding. The live project-discovery results below describe v0.1.1.
+
 Release **v0.1.1** was installed from the public GitHub marketplace and exercised with **Codex CLI 0.163.0**, **Node.js 24.22.0**, on **macOS**, on 2026-10-23.
 
 ## Live Codex sessions

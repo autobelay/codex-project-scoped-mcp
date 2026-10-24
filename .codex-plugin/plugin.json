@@ -1,16 +1,18 @@
 {
   "name": "codex-project-scoped-mcp",
-  "version": "0.1.1",
-  "description": "Automatically discover the current project\u2019s mcp.json and connect its local and remote MCP servers.",
+  "version": "0.1.2",
+  "description": "Automatically load the MCP tools declared in your current project's mcp.json.",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "Project-scoped MCP",
-    "shortDescription": "Your project\u2019s tools, locally",
-    "longDescription": "Loads the nearest project mcp.json when a local Codex session starts. Servers and relative paths stay scoped to that checkout. No launch wrapper or configuration synchronization.",
+    "displayName": "Local Project MCP",
+    "shortDescription": "Your project's MCP tools",
+    "longDescription": "Install once, then open a project in Codex. Local Project MCP finds the nearest mcp.json within that checkout, starts its local servers from the project directory, and connects any configured remote servers. The project's tools become available for that session, without a launch wrapper, watcher, or configuration sync. Requires Node.js 22+ and each server's own runtimes and credentials. Runs on your machine; it does not upload your project to a hosted bridge.",
     "developerName": "Autobelay",
     "category": "Developer Tools",
     "capabilities": [
-      "Local project MCP discovery"
+      "Discover project MCP servers",
+      "Use local and remote project tools",
+      "Report project connection status"
     ],
     "websiteURL": "https://github.com/autobelay/codex-project-scoped-mcp"
   },

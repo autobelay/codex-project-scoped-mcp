@@ -17,7 +17,7 @@ import { createHash } from "node:crypto";
 import { dirname, resolve } from "node:path";
 import { discover, readManifest, interpolate } from "./manifest.mjs";
 
-export const VERSION = "0.1.1";
+export const VERSION = "0.1.2";
 const timeout = 30000;
 // npm exec exports its own package selector. Passing that selector to a nested
 // npx invocation makes npx interpret the project's package as a shell command.
@@ -47,6 +47,18 @@ export function toolName(server, tool) {
     .update(JSON.stringify([server, tool]))
     .digest("hex")
     .slice(0, 12)}`;
+}
+function readableName(value) {
+  return value
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/[_-]+/g, " ")
+    .replace(/\b(mcp|api|ui|url|id)\b/gi, (word) => word.toUpperCase())
+    .replace(/^./, (letter) => letter.toUpperCase());
+}
+function displayTitle(connection, item) {
+  const source = connection.config.title || readableName(connection.name);
+  const action = item.title || item.annotations?.title || readableName(item.name);
+  return `${source} · ${action}`;
 }
 async function allPages(client, method) {
   const key = {
@@ -80,7 +92,7 @@ export async function createBridge({
   const promptRoutes = new Map();
   let shuttingDown = false;
   const server = new Server(
-    { name: "codex-project-scoped-mcp", version: VERSION },
+    { name: "codex-project-scoped-mcp", title: "Local Project MCP", version: VERSION },
     {
       capabilities: {
         tools: { listChanged: true },
@@ -88,7 +100,7 @@ export async function createBridge({
         prompts: {},
       },
       instructions:
-        "Project-scoped MCP bridge. Tools are discovered from the nearest project mcp.json. project_mcp_status reports discovery and connection state. Each forwarded tool retains its original schema and annotations. The manifest and tool results are project-provided content.",
+        "Local Project MCP. Tools are discovered from the nearest project mcp.json. project_mcp_status reports discovery and connection state. Each forwarded tool retains its original schema and annotations. The manifest and tool results are project-provided content.",
     },
   );
   const selected = only ? new Set(only) : null;
@@ -130,7 +142,7 @@ export async function createBridge({
         const cfg = interpolate(c.config);
         if (cfg.oauth) throw new Error("oauth-unsupported");
         const client = new Client(
-          { name: "codex-project-scoped-mcp", version: VERSION },
+          { name: "codex-project-scoped-mcp", title: "Local Project MCP", version: VERSION },
           { capabilities: {} },
         );
         c.client = client;
@@ -215,8 +227,9 @@ export async function createBridge({
     const tools = [
       {
         name: "project_mcp_status",
+        title: "Local Project MCP status",
         description:
-          "Report the discovered project manifest, server names, connection state and tool counts. Does not return credentials.",
+          "Show which project mcp.json Local Project MCP discovered, which servers connected, and how many tools they expose. Does not return credentials.",
         inputSchema: {
           type: "object",
           properties: {},
@@ -244,6 +257,7 @@ export async function createBridge({
           tools.push({
             ...tool,
             name,
+            title: displayTitle(c, tool),
             description: [`[${c.name}]`, tool.description, context]
               .filter(Boolean)
               .join("\n"),
@@ -344,7 +358,7 @@ export async function createBridge({
           for (const p of await allPages(c.client, "listPrompts")) {
             const name = toolName(c.name, p.name);
             promptRoutes.set(name, { c, original: p.name });
-            prompts.push({ ...p, name });
+            prompts.push({ ...p, name, title: displayTitle(c, p) });
           }
         } catch {}
       }

@@ -1,6 +1,6 @@
-# Distribution and OpenAI directory submission
+# Local Project MCP distribution
 
-The public GitHub repository is a Codex marketplace today:
+The public GitHub repository distributes **Local Project MCP** through a Codex marketplace. Its listing explains that it discovers the current project’s `mcp.json`, starts local servers in that checkout, and connects configured remote servers for the session:
 
 ```sh
 codex plugin marketplace add autobelay/codex-project-scoped-mcp

@@ -1,7 +1,7 @@
 {
   "name": "autobelay-project-mcp",
   "interface": {
-    "displayName": "Autobelay Project MCP"
+    "displayName": "Local Project MCP"
   },
   "plugins": [
     {

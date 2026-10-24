@@ -1,4 +1,4 @@
-# Codex Project-scoped MCP
+# Local Project MCP for Codex
 
 Install once. Open a project in Codex. Use the MCP servers declared by that project.
 
@@ -21,6 +21,8 @@ codex
 ```
 
 Ask: “Use project_mcp_status to report which project MCP servers are connected.” The underlying tools are individually available; the model does not have to call a generic dispatcher.
+
+**Local Project MCP** is the display name; `codex-project-scoped-mcp` remains the installation ID. The MCP connection is named `local-project-mcp`. Forwarded tools include readable MCP titles while retaining their stable routing names. Clients that display raw technical names may still show the routing suffix.
 
 The plugin launches a version-pinned release with `npx`. Its first launch downloads the bundled executable from this public GitHub repository; subsequent launches use npm's cache. There are no package installation scripts or runtime npm dependencies. Internet access is required for the initial installation. The project's own servers may have additional runtimes and credentials to install.
 
@@ -130,7 +132,7 @@ The package contains no lifecycle hooks. OpenAI currently requires approved-part
 The release tarball also provides a normal MCP executable:
 
 ```sh
-npx --yes --package https://github.com/autobelay/codex-project-scoped-mcp/releases/download/v0.1.1/autobelay-codex-project-scoped-mcp-0.1.1.tgz codex-project-scoped-mcp
+npx --yes --package https://github.com/autobelay/codex-project-scoped-mcp/releases/download/v0.1.2/autobelay-codex-project-scoped-mcp-0.1.2.tgz codex-project-scoped-mcp
 ```
 
 This speaks MCP over stdin/stdout; it is not an interactive command. `--directory PATH`, `--manifest PATH` and `--only server-a,server-b` are available for explicit embedding and diagnosis. Normal plugin installation needs none of them.

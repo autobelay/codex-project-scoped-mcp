@@ -75,8 +75,12 @@ test("bundle discovers cwd; forwards tools, pagination, env, resources and promp
   );
   const c = await client(t, join(p, "nested"));
   const list = await c.listTools();
+  assert.equal(c.getServerVersion().title, "Local Project MCP");
+  assert.equal(list.tools.find((x) => x.name === "project_mcp_status").title, "Local Project MCP status");
   assert.equal(list.tools.length, 3);
   const inspect = list.tools.find((x) => x.name.startsWith("design__inspect"));
+  assert.equal(inspect.title, "Design · Inspect");
+  assert.equal(list.tools.find((x) => x.name.startsWith("design__second")).title, "Design · Read another token");
   assert.equal(inspect.annotations.readOnlyHint, true);
   const result = await c.callTool({ name: inspect.name, arguments: {} });
   assert.deepEqual(JSON.parse(result.content[0].text), {
@@ -96,6 +100,7 @@ test("bundle discovers cwd; forwards tools, pagination, env, resources and promp
     "blue",
   );
   const prompts = await c.listPrompts();
+  assert.equal(prompts.prompts[0].title, "Design · Design");
   assert.equal(
     (await c.getPrompt({ name: prompts.prompts[0].name })).messages[0].content
       .text,
